@@ -4,17 +4,18 @@ const mongoose = require("mongoose");
 const { response } = require('../app');
 const CustomerModel = require('../models/customers.model');
 
+
 //get request...through handler....
 
 router.get('/',(req,res,next)=>{
     res.send('Students Response with a request resource');
 })
 
-router.put('/update',(req,res,next)=>{
+router.put('/edit',(req,res,next)=>{
      
-    const department =req.query.department;
+    const emailAddress =req.query.emailAddress;
 
-    CustomerModel.updateMany({age:26},{department:department},(err,response)=>{
+    CustomerModel.updateMany({phoneNumber:8565844192},{emailAddress:emailAddress},(err,response)=>{
     if(err)
     {
         res.send(err);
@@ -27,18 +28,25 @@ router.put('/update',(req,res,next)=>{
 })
 
 
-router.put('/updateUser',(req,res,next)=>{
+router.put('/update',(req,res,next)=>{
      
-    const id =req.query.id;
-    const department =req.query.department;
+    const id =req.body.id;
+    const customerObj = {
+        firstName:req.body.firstName,
+        lastName:req.body.lastName,
+        emailAddress:req.body.emailAddress,
+        dob:req.body.dob,
+        phoneNumber:req.body.phoneNumber
+    }
+    // const phoneNumber =req.query.phoneNumber;
 
-    CustomerModel.findByIdAndUpdate(id,{department:department},(err,response)=>{
+    CustomerModel.findByIdAndUpdate(id,customerObj,(err,response)=>{
     if(err)
     {
         res.send(err);
     }
     else{
-        res.send({status:200,students:response})
+        res.send({status:200,message:"Customer Updated Successfully",customer:customerObj})
     }
    });
     
@@ -46,10 +54,10 @@ router.put('/updateUser',(req,res,next)=>{
 
 router.put('/updateOne',(req,res,next)=>{
      
-    const age=req.query.age;
-    const lastName =req.query.lastName;
+    const phoneNumber=req.query.phoneNumber;
+    const emailAddress =req.query.emailAddress;
 
-    CustomerModel.findOneAndUpdate({age:age},{lastName:lastName},(err,response)=>{
+    CustomerModel.findOneAndUpdate({phoneNumber:phoneNumber},{emailAddress:emailAddress},(err,response)=>{
     if(err)
     {
         res.send(err);
@@ -61,7 +69,7 @@ router.put('/updateOne',(req,res,next)=>{
     
 })
 
-router.delete('/deleteUser',(req,res,next)=>{
+router.delete('/delete',(req,res,next)=>{
      
     const id=req.query.id;
     
@@ -72,28 +80,12 @@ router.delete('/deleteUser',(req,res,next)=>{
         res.send(err);
     }
     else{
-        res.send({status:200,students:response})
+        res.send({status:200,customer:response})
     }
    });
     
 })
 
-// router.delete('/deleteUser',(req,res,next)=>{
-     
-//     const id=req.query.id;
-    
-
-//     CustomerModel.remove(id,(err,response)=>{
-//     if(err)
-//     {
-//         res.send(err);
-//     }
-//     else{
-//         res.send({status:200,students:response})
-//     }
-//    });
-    
-// })
 
 
 
@@ -106,7 +98,7 @@ router.get('/list',(req,res,next)=>{
         res.send(err);
     }
     else{
-        res.send({status:200,resultsFound:response.length,students:response})
+        res.send({status:200,resultsFound:response.length,customers:response})
     }
    });
     
@@ -123,7 +115,7 @@ router.get('/searchByFirstName',(req,res,next)=>{
         res.send(err);
     }
     else{
-        res.send({status:200,resultsFound:response.length,students:response})
+        res.send({status:200,resultsFound:response.length,customers:response})
     }
    });
     
@@ -139,7 +131,7 @@ router.get('/searchById',(req,res,next)=>{
         res.send(err);
     }
     else{
-        res.send({status:200,students:response})
+        res.send({status:200,customer:response})
     }
    });
     
@@ -149,23 +141,22 @@ router.get('/searchById',(req,res,next)=>{
 
 router.post('/add',(req,res,next)=>{
     console.log(req.body);
-    let newStudent = new CustomerModel({
+    let newCustomer = new CustomerModel({
         firstName:req.body.firstName,
         lastName:req.body.lastName,
-        age:req.body.age,
-        email:req.body.email,
+        emailAddress:req.body.emailAddress,
         dob:req.body.dob,
-        department:req.body.department
+        phoneNumber:req.body.phoneNumber
     })
-   newStudent.save((err,newStudent)=>{
+    newCustomer.save((err,newCustomer)=>{
 
     if(err)
     {
         res.send(err);
     }
     else{
-        console.log("Student Form Data : ",newStudent)
-        res.send({status:200,resultsFound:response.length,message:'Student Added Successfully',studObj:newStudent})
+        console.log("Customer Form Data : ",newCustomer)
+        res.send({status:200,message:'Customer Added Successfully',customerObject:newCustomer})
     }
    });
     
